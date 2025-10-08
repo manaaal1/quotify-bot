@@ -75,8 +75,6 @@ def get_random_quote():
     except Exception:
         return random.choice(FALLBACK_QUOTES)
 
-create_table()
-
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Welcome to Quotify! I post a daily quote to your channel. "
@@ -166,8 +164,9 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("post", post))
     app.add_handler(CommandHandler("addschedule", addschedule))
+    app.add_handler(CommandHandler("test", test))
 
-    # Schedule daily job (default 09:00 Addis Ababa). Use env vars to override.
+    # Schedule daily job (default 11:11 Addis Ababa). Use env vars to override.
     tz_name = os.getenv("TZ", "Africa/Addis_Ababa")
     tz = pytz.timezone(tz_name)
     hour = int(os.getenv("DAILY_HOUR", "11"))
@@ -198,5 +197,8 @@ def main():
         logger.info("Starting in polling mode (local testing).")
         app.run_polling()
 
+
 if __name__ == "__main__":
     main()
+
+
