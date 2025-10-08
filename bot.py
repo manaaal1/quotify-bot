@@ -174,7 +174,7 @@ def main():
 
     app.job_queue.run_daily(send_daily, time(hour, minute, tzinfo=tz))
 
-    logger.info("Starting background worker (scheduler mode).")
+    logger.info("Starting in polling mode (local testing).")
     app.run_polling()  # runs continuously in background on Render
 
 
