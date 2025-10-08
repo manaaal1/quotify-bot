@@ -164,7 +164,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("post", post))
     app.add_handler(CommandHandler("addschedule", addschedule))
-    app.add_handler(CommandHandler("test", test))
+
 
     # Schedule daily job (default 11:11 Addis Ababa). Use env vars to override.
     tz_name = os.getenv("TZ", "Africa/Addis_Ababa")
