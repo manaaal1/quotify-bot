@@ -172,30 +172,10 @@ def main():
     hour = int(os.getenv("DAILY_HOUR", "11"))
     minute = int(os.getenv("DAILY_MIN", "11"))
 
-    # Load schedules from database and schedule jobs
-    for schedule in load_schedules():
-        schedule_id, chat_id, scheduled_time = schedule
-        hour, minute, _ = map(int, str(scheduled_time).split(":"))
+    app.job_queue.run_daily(send_daily, time(hour, minute, tzinfo=tz))
 
-        app.job_queue.run_daily(
-            lambda context, c=chat_id: context.bot.send_message(chat_id=c, text=get_random_quote()),
-            time(hour, minute)
-        )
-
-    # If WEBHOOK_URL env var is set, run webhook mode (recommended for hosting).
-    WEBHOOK_URL = os.getenv("WEBHOOK_URL")  # e.g. https://yourservice.onrender.com/<BOT_TOKEN>
-    PORT = int(os.getenv("PORT", "8443"))
-
-    if WEBHOOK_URL:
-        # NOTE: python-telegram-bot provides run_webhook; hosting docs differ slightly by version.
-        # This will start a small webserver to receive updates from Telegram.
-        logger.info("Starting in webhook mode.")
-        # webhook path should match the URL you give Telegram (we use token as path part)
-        url_path = f"/{TOKEN}"
-        app.run_webhook(listen="0.0.0.0", port=PORT, url_path=url_path, webhook_url=WEBHOOK_URL.rstrip("/"))
-    else:
-        logger.info("Starting in polling mode (local testing).")
-        app.run_polling()
+    logger.info("Starting background worker (scheduler mode).")
+    app.run_polling()  # runs continuously in background on Render
 
 
 if __name__ == "__main__":
