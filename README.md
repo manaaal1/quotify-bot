@@ -1,13 +1,17 @@
 Quotify — Daily Quotes Channel Bot
----------------------------------
-A small Python Telegram bot that auto-posts a curated quote to a private channel every day, and allows the owner to post on-demand.
+A Python Telegram bot that automatically posts a daily inspirational quote to a private channel, fetches quotes from an API with fallback options, and allows the owner to post messages on-demand. Supports optional schedule persistence with PostgreSQL.
 
 Tech: Python, python-telegram-bot, requests, apscheduler/job-queue
-Deployment: Deployable to Render free web services (webhook mode).
+Deployment: Deployable to Render free web services (polling or webhook mode).
 
 Features:
-- /start — welcome
-- /post <message> — post immediately (admin only)
-- Daily automatic quote (configurable hour & TZ)
 
-Notes: Bot token and channel id are stored as environment variables. See bot.py and deploy instructions.
+/start — welcome message
+
+/post — post immediately (admin only)
+
+Daily automatic quote (configurable hour & timezone)
+
+Optional database persistence for scheduled posts
+
+Notes: Bot token, channel ID, admin ID, and optional database URL are stored as environment variables. See bot.py and deployment instructions.
