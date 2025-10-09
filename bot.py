@@ -113,7 +113,8 @@ def main():
     tz = pytz.timezone(tz_name)
     hour = int(os.getenv("DAILY_HOUR", "11"))
     minute = int(os.getenv("DAILY_MIN", "11"))
-    app.job_queue.run_daily(send_daily, time(hour, minute, tzinfo=tz))
+    job = app.job_queue.run_daily(send_daily, time(hour, minute, tzinfo=tz))
+    logger.info(f"Next quote scheduled for: {job.next_t_run}")
 
     logger.info("Starting in polling mode (Render compatible).")
     app.run_polling()  # keeps running in the background
