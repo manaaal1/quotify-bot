@@ -7,7 +7,7 @@ from datetime import time
 import requests
 import pytz
 
-from telegram import Update
+from telegram import Update, Bot
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 logging.basicConfig(level=logging.INFO)
@@ -159,12 +159,18 @@ def main():
         print("Missing BOT_TOKEN environment variable.")
         return
 
+    # Create the bot instance
+    bot = Bot(token=TOKEN)
+
+    # ✅ Clear any existing webhook or polling conflicts
+    import asyncio
+    asyncio.run(bot.delete_webhook(drop_pending_updates=True))
+
     app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("post", post))
     app.add_handler(CommandHandler("addschedule", addschedule))
-
 
     # Schedule daily job (default 11:11 Addis Ababa). Use env vars to override.
     tz_name = os.getenv("TZ", "Africa/Addis_Ababa")
@@ -176,7 +182,6 @@ def main():
 
     logger.info("Starting in polling mode (local testing).")
     app.run_polling()  # runs continuously in background on Render
-
 
 if __name__ == "__main__":
     main()
