@@ -26,9 +26,9 @@ def get_random_quote():
     try:
         r = requests.get(QUOTES_API, timeout=6)
         r.raise_for_status()
-        quotes = r.json()
-        q = random.choice(quotes)
-        return f'"{q.get("text")}" — {q.get("author") or "Unknown"}'
+        data = r.json()
+        q = data[0]
+        return f'"{q.get("q")}" — {q.get("a") or "Unknown"}'
     except Exception:
         return random.choice(FALLBACK_QUOTES)
 
@@ -66,16 +66,7 @@ async def send_daily(context: ContextTypes.DEFAULT_TYPE):
         logger.warning("CHANNEL_ID not set; skipping daily post.")
         return
 
-    try:
-        r = requests.get(QUOTES_API, timeout=6)
-        r.raise_for_status()
-        quotes = r.json()
-        q = random.choice(quotes)
-        text = f'"{q.get("text")}" — {q.get("author") or "Unknown"}'
-    except Exception as e:
-        logger.exception("Failed to fetch quotes; using fallback.")
-        text = random.choice(FALLBACK_QUOTES)
-
+    text = get_random_quote()  # now uses the updated function
     await context.bot.send_message(chat_id=channel, text=text)
 
 def main():
