@@ -13,7 +13,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-QUOTES_API = "hhttps://zenquotes.io/api/random"
+QUOTES_API = "https://zenquotes.io/api/random"
 FALLBACK_QUOTES = [
     "The best way to predict the future is to invent it. — Alan Kay",
     "Be yourself; everyone else is already taken. — Oscar Wilde",
