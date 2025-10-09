@@ -135,10 +135,6 @@ async def addschedule(update: Update, context: ContextTypes.DEFAULT_TYPE):
     scheduled_time = context.args[0]
     channel = os.getenv("CHANNEL_ID")
 
-    # Save to database
-    save_schedule(channel, scheduled_time)
-    await update.message.reply_text(f"✅ Schedule added for {scheduled_time}")
-
     # Parse hour and minute
     try:
         hour, minute = map(int, scheduled_time.split(":"))
@@ -146,9 +142,13 @@ async def addschedule(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("❌ Invalid time format. Use HH:MM")
         return
 
+    # Save to database
+    save_schedule(channel, scheduled_time)
+    await update.message.reply_text(f"✅ Schedule added for {scheduled_time}")
+
     # Schedule the job immediately in the job queue
-    context.job_queue.run_daily(
-        lambda ctx, c=channel: ctx.bot.send_message(chat_id=c, text=get_random_quote()),
+    context.application.job_queue.run_daily(
+        lambda ctx, chat=channel: ctx.bot.send_message(chat_id=chat, text=get_random_quote()),
         time(hour, minute)
     )
     await update.message.reply_text(f"🕒 Job scheduled for {hour:02d}:{minute:02d} daily")
